@@ -37,7 +37,7 @@ class InstallController
         if (phpversion() > '7.5') {
             return '您的php版本太高，不能安装本软件，兼容php版本7.1~7.3，谢谢！';
         }
-        date_default_timezone_set('PRC');
+        date_default_timezone_set('Asia/Shanghai');
         error_reporting(E_ALL & ~E_NOTICE);
         //数据库
         $sqlFile = 'crmeb.sql';
@@ -62,7 +62,7 @@ class InstallController
                     'powered' => $Powered
                 ]);
             case '2':
-                $phpv = @ phpversion();
+                $phpv = @phpversion();
                 $os = PHP_OS;
                 $tmp = function_exists('gd_info') ? gd_info() : array();
                 $server = $_SERVER["SERVER_SOFTWARE"];
@@ -171,7 +171,6 @@ class InstallController
                         <td>$w</td>
                         <td>$r</td>
                     </tr>";
-
                 }
 
                 //必须开启函数
@@ -355,7 +354,7 @@ class InstallController
                         if (strstr($sql, 'CREATE TABLE')) {
                             preg_match('/CREATE TABLE(\sIF NOT EXISTS)? `eb_([^ ]*)`/is', $sql, $matches);
                             mysqli_query($conn, "DROP TABLE IF EXISTS `$matches[2]`");
-                            $sql = str_replace('`eb_', '`' . $dbPrefix, $sql);//替换表前缀
+                            $sql = str_replace('`eb_', '`' . $dbPrefix, $sql); //替换表前缀
                             $ret = mysqli_query($conn, $sql);
                             if ($ret) {
                                 $message = '<li><span class="correct_span">&radic;</span>创建数据表[' . $dbPrefix . $matches[2] . ']完成!<span style="float: right;">' . date('Y-m-d H:i:s') . '</span></li> ';
@@ -369,7 +368,7 @@ class InstallController
                         } else {
                             if (trim($sql) == '')
                                 continue;
-                            $sql = str_replace('`eb_', '`' . $dbPrefix, $sql);//替换表前缀
+                            $sql = str_replace('`eb_', '`' . $dbPrefix, $sql); //替换表前缀
                             $ret = mysqli_query($conn, $sql);
                             $message = '';
                             $i++;
@@ -382,15 +381,18 @@ class InstallController
                     // 清空测试数据
                     if (!$post['demo']) {
                         $result = mysqli_query($conn, "show tables");
-                        $tables = mysqli_fetch_all($result);//参数MYSQL_ASSOC、MYSQLI_NUM、MYSQLI_BOTH规定产生数组类型
-                        $bl_table = array('eb_system_admin'
-                        , 'eb_system_config'
-                        , 'eb_system_config_tab'
-                        , 'eb_system_menus'
-                        , 'eb_system_group'
-                        , 'eb_system_group_data'
-                        , 'eb_chat_service_speechcraft'
-                        , 'eb_cache', 'eb_application');
+                        $tables = mysqli_fetch_all($result); //参数MYSQL_ASSOC、MYSQLI_NUM、MYSQLI_BOTH规定产生数组类型
+                        $bl_table = array(
+                            'eb_system_admin',
+                            'eb_system_config',
+                            'eb_system_config_tab',
+                            'eb_system_menus',
+                            'eb_system_group',
+                            'eb_system_group_data',
+                            'eb_chat_service_speechcraft',
+                            'eb_cache',
+                            'eb_application'
+                        );
                         foreach ($bl_table as $k => $v) {
                             $bl_table[$k] = str_replace('eb_', $dbPrefix, $v);
                         }
@@ -488,7 +490,6 @@ class InstallController
                         $arr = array('n' => 999999, 'msg' => $message);
                         return $arr;
                     }
-
                 }
 
 
@@ -530,8 +531,8 @@ class InstallController
     protected function generateRandomKey()
     {
         return 'base64:' . base64_encode(
-                \crmeb\utils\Encrypter::generateKey(app()->config->get('app.cipher'))
-            );
+            \crmeb\utils\Encrypter::generateKey(app()->config->get('app.cipher'))
+        );
     }
 
     //读取版本号
@@ -547,7 +548,7 @@ class InstallController
         return $version_arr;
     }
 
-//写入安装信息
+    //写入安装信息
     function installlog()
     {
         $mt_rand_str = $this->sp_random_string(6);
@@ -558,12 +559,68 @@ class InstallController
     function sp_random_string($len = 8)
     {
         $chars = array(
-            "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k",
-            "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v",
-            "w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G",
-            "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R",
-            "S", "T", "U", "V", "W", "X", "Y", "Z", "0", "1", "2",
-            "3", "4", "5", "6", "7", "8", "9"
+            "a",
+            "b",
+            "c",
+            "d",
+            "e",
+            "f",
+            "g",
+            "h",
+            "i",
+            "j",
+            "k",
+            "l",
+            "m",
+            "n",
+            "o",
+            "p",
+            "q",
+            "r",
+            "s",
+            "t",
+            "u",
+            "v",
+            "w",
+            "x",
+            "y",
+            "z",
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H",
+            "I",
+            "J",
+            "K",
+            "L",
+            "M",
+            "N",
+            "O",
+            "P",
+            "Q",
+            "R",
+            "S",
+            "T",
+            "U",
+            "V",
+            "W",
+            "X",
+            "Y",
+            "Z",
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9"
         );
         $charsLen = count($chars) - 1;
         shuffle($chars);    // 将数组打乱
@@ -583,7 +640,6 @@ class InstallController
                 return true;
             }
             return false;
-
         } else {
             $tfile = "_test.txt";
             $fp = @fopen($d . "/" . $tfile, "w");
