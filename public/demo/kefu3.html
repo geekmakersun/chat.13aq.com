@@ -1,25 +1,27 @@
+<!-- @format -->
+
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>移动端展示</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
-
-</head>
-<body>
-<script src="https://chat.crmeb.net/customerServer.js"></script>
-<script>
-    var option = {
-        openUrl: 'https://chat.crmeb.net',
-        token: 'e8bcc017f50e55c63b5352c4257c8904',
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1.0,user-scalable=no"
+    />
+  </head>
+  <body>
+    <script src="http://chat.local.13aq.com/customerServer.js"></script>
+    <script>
+      var option = {
+        openUrl: "http://chat.local.13aq.com",
+        token: "389160764418925e13f7d8b650e4e922",
         isShowTip: true,
-        deviceType:'Mobile',//打开端 Mobile
-    };
-    var canCustomerServer = new initCustomerServer(option);
-    canCustomerServer.init();
-//    canCustomerServer.getCustomeServer();
-
-</script>
-
-</body>
+        deviceType: "Mobile", //打开端 Mobile
+      };
+      var canCustomerServer = new initCustomerServer(option);
+      canCustomerServer.init();
+      //    canCustomerServer.getCustomeServer();
+    </script>
+  </body>
 </html>
