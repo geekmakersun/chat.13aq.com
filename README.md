@@ -213,6 +213,3 @@ http://域名/kefu
 All rights reserved。
 
 CRMEB® 商标和著作权所有者为西安众邦网络科技有限公司。
-# chat.local.13aq.com
-# chat.local.13aq.com
-# chat.local.13aq.com
