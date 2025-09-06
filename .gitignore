@@ -6,8 +6,5 @@
 /public/install/install.lock
 /.env
 /swoole.pid
-runtime/cache/*
-runtime/log/*
-runtime/session/*
-runtime/temp/*
+runtime/*
 !runtime/*/.gitkeep
