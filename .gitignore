@@ -3,7 +3,7 @@
 /backup
 *.log
 /public/install/install.lock
-/.env
+
 /swoole.pid
 runtime/*
 !runtime/*/.gitkeep
