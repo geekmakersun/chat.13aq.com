@@ -1,8 +1,5 @@
 /.git
-/.idea
-/backup
-/public/uploads
+
 *.log
 /public/install/install.lock
-/.env
 /swoole.pid
