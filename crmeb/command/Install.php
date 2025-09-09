@@ -55,7 +55,9 @@ class Install extends Command
      * @var string[]
      */
     protected $checkLoaded = [
-        'redis', 'swoole', 'fileinfo'
+        'redis',
+        'swoole',
+        'fileinfo'
     ];
 
     /**
@@ -63,7 +65,9 @@ class Install extends Command
      * @var string[]
      */
     protected $checkFunction = [
-        'curl_init', 'openssl_encrypt', 'gd_info'
+        'curl_init',
+        'openssl_encrypt',
+        'gd_info'
     ];
 
     /**
@@ -93,7 +97,8 @@ class Install extends Command
 
         $database = env('database.database');
         if (in_array($status, ['start', 'remove'])) {
-            if (!env('database.hostname') ||
+            if (
+                !env('database.hostname') ||
                 !$database ||
                 !env('database.username') ||
                 !env('database.password') ||
@@ -176,7 +181,7 @@ class Install extends Command
         [$account, $password] = $this->createAdmin();
 
         file_put_contents($installLockDir, time());
-        chown($installLockDir, 'www');
+        chown($installLockDir, 'www-data');
 
         $output->info('安装完成!!请妥善保管您的账号密码!');
         $output->info('账号:' . $account);
@@ -351,13 +356,11 @@ class Install extends Command
             try {
                 $this->app->db->transaction(function () use ($tablepre, $sql, $tableName) {
 
-                    $sql = str_replace('`eb_', '`' . $tablepre, $sql);//替换表前缀
+                    $sql = str_replace('`eb_', '`' . $tablepre, $sql); //替换表前缀
                     $this->app->db->query($sql);
-
                 });
 
                 $tableName && $table->addRow([$tableName, 'ok', '无错误', date('Y-m-d H:i:s')]);
-
             } catch (\Throwable $e) {
                 $tableName && $table->addRow([$tableName, 'x', $e->getMessage(), date('Y-m-d H:i:s')]);
             }
@@ -423,10 +426,18 @@ class Install extends Command
     {
         $tablepre = env('database.prefix');
         $database = env('database.database');
-        $blTable  = ['eb_system_admin', 'eb_system_role', 'eb_system_config',
-            'eb_system_config_tab', 'eb_system_menus', 'eb_system_group',
-            'eb_system_group_data', 'eb_agreement', 'eb_chat_service_speechcraft',
-            'eb_cache'];
+        $blTable  = [
+            'eb_system_admin',
+            'eb_system_role',
+            'eb_system_config',
+            'eb_system_config_tab',
+            'eb_system_menus',
+            'eb_system_group',
+            'eb_system_group_data',
+            'eb_agreement',
+            'eb_chat_service_speechcraft',
+            'eb_cache'
+        ];
         if ($tablepre !== 'eb_') {
             $blTable = array_map(function ($name) use ($tablepre) {
                 return str_replace('eb_', $tablepre, $name);
@@ -504,7 +515,7 @@ class Install extends Command
 
                 $res = $service->backup($t, 0);
                 if ($res == false && $res != 0) {
-                    $data [] = $t;
+                    $data[] = $t;
                 }
             }
 
