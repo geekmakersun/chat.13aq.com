@@ -2,4 +2,4 @@
 
 *.log
 /public/install/install.lock
-/swoole.pid
+runtime/swoole.pid

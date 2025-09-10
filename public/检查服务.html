@@ -1,0 +1,339 @@
+<!-- @format -->
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>服务状态检查</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
+
+      .container {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        padding: 40px;
+        max-width: 600px;
+        width: 100%;
+        text-align: center;
+        transition: transform 0.3s ease;
+      }
+
+      .container:hover {
+        transform: translateY(-5px);
+      }
+
+      h1 {
+        color: #333;
+        margin-bottom: 20px;
+        font-size: 2.5rem;
+        font-weight: 700;
+      }
+
+      .status-indicator {
+        margin: 30px 0;
+        padding: 30px;
+        border-radius: 12px;
+        background: #f8f9fa;
+        position: relative;
+        transition: all 0.5s ease;
+      }
+
+      .status-text {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 15px;
+      }
+
+      .status-loading {
+        color: #ff9800;
+        background: rgba(255, 152, 0, 0.1);
+      }
+
+      .status-online {
+        color: #4caf50;
+        background: rgba(76, 175, 80, 0.1);
+      }
+
+      .status-offline {
+        color: #f44336;
+        background: rgba(244, 67, 54, 0.1);
+      }
+
+      .status-timeout {
+        color: #ff9800;
+        background: rgba(255, 152, 0, 0.1);
+      }
+
+      .icon {
+        font-size: 5rem;
+        margin-bottom: 20px;
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.05);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      .check-btn {
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        color: white;
+        border: none;
+        padding: 15px 30px;
+        border-radius: 30px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        margin-bottom: 20px;
+      }
+
+      .check-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+      }
+
+      .check-btn:active {
+        transform: translateY(0);
+      }
+
+      .details {
+        margin-top: 15px;
+        color: #666;
+        font-size: 0.9rem;
+        line-height: 1.6;
+      }
+
+      .service-info {
+        margin: 20px 0;
+        padding: 15px;
+        background: #f0f4f8;
+        border-radius: 8px;
+        text-align: left;
+      }
+
+      .info-item {
+        margin: 8px 0;
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .info-label {
+        font-weight: 600;
+        color: #555;
+      }
+
+      .auto-refresh {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 20px;
+        color: #666;
+        font-size: 0.9rem;
+      }
+
+      .auto-refresh input {
+        margin-right: 8px;
+      }
+
+      @media (max-width: 600px) {
+        .container {
+          padding: 25px;
+        }
+
+        h1 {
+          font-size: 2rem;
+        }
+
+        .status-text {
+          font-size: 1.2rem;
+        }
+
+        .service-info {
+          text-align: center;
+        }
+
+        .info-item {
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>服务状态检查</h1>
+
+      <div class="service-info">
+        <div class="info-item">
+          <span class="info-label">检查端口:</span>
+          <span>20108</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">检查类型:</span>
+          <span>本地服务连接</span>
+        </div>
+      </div>
+
+      <div
+        class="status-indicator status-loading"
+        id="statusContainer"
+      >
+        <div
+          class="icon"
+          id="statusIcon"
+        >
+          ⏳
+        </div>
+        <div
+          class="status-text"
+          id="statusText"
+        >
+          正在检查端口20108状态...
+        </div>
+      </div>
+
+      <button
+        class="check-btn"
+        id="checkBtn"
+      >
+        重新检查
+      </button>
+
+      <div class="auto-refresh">
+        <input
+          type="checkbox"
+          id="autoRefresh"
+          checked
+        />
+        <label for="autoRefresh">自动刷新 (30秒)</label>
+      </div>
+
+      <div class="details">
+        <p>上次检查时间: <span id="lastCheckTime">刚刚</span></p>
+        <p>服务描述: 本地服务端口连接状态监控</p>
+        <p
+          id="additionalInfo"
+          style="color: #888"
+        >
+          请确保相关服务已正确配置并启动
+        </p>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const statusContainer = document.getElementById("statusContainer");
+        const statusIcon = document.getElementById("statusIcon");
+        const statusText = document.getElementById("statusText");
+        const checkBtn = document.getElementById("checkBtn");
+        const lastCheckTime = document.getElementById("lastCheckTime");
+        const additionalInfo = document.getElementById("additionalInfo");
+        const autoRefreshCheckbox = document.getElementById("autoRefresh");
+
+        let refreshInterval;
+        const REFRESH_INTERVAL_MS = 30000; // 30秒
+
+        // 开始自动刷新
+        function startAutoRefresh() {
+          if (refreshInterval) {
+            clearInterval(refreshInterval);
+          }
+
+          if (autoRefreshCheckbox.checked) {
+            refreshInterval = setInterval(checkServiceStatus, REFRESH_INTERVAL_MS);
+          }
+        }
+
+        // 实际检查服务状态 - 检查端口20108是否能访问
+        function checkServiceStatus() {
+          // 重置状态显示
+          statusIcon.textContent = "⏳";
+          statusText.textContent = "正在检查端口20108状态...";
+          statusText.className = "status-text";
+          statusContainer.className = "status-indicator status-loading";
+          additionalInfo.textContent = "正在尝试连接到本地端口20108...";
+
+          // 设置请求超时时间（5秒）
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+          // 实际检查http://127.0.0.1:20108是否可访问
+          fetch("http://127.0.0.1:20108", {
+            method: "GET",
+            mode: "no-cors", // 使用no-cors模式以避免跨域问题
+            signal: controller.signal,
+            timeout: 5000,
+          })
+            .then((response) => {
+              clearTimeout(timeoutId);
+              // 显示连接成功信息
+              statusIcon.textContent = "✅";
+              statusText.textContent = "端口20108已启动";
+              statusText.className = "status-text";
+              statusContainer.className = "status-indicator status-online";
+              additionalInfo.textContent = "成功连接到端口20108，服务正常运行中";
+            })
+            .catch((error) => {
+              clearTimeout(timeoutId);
+              if (error.name === "AbortError") {
+                // 超时情况
+                statusIcon.textContent = "⏱️";
+                statusText.textContent = "端口20108连接超时";
+                statusContainer.className = "status-indicator status-timeout";
+                additionalInfo.textContent = "连接端口20108超时，请检查服务是否启动或网络是否通畅";
+              } else {
+                // 其他错误情况（通常是服务未启动）
+                statusIcon.textContent = "❌";
+                statusText.textContent = "端口20108未启动";
+                statusContainer.className = "status-indicator status-offline";
+                additionalInfo.textContent = "无法连接到端口20108，请确认服务是否已启动";
+              }
+            })
+            .finally(() => {
+              // 更新检查时间
+              const now = new Date();
+              const timeString = now.getFullYear() + "-" + (now.getMonth() + 1).toString().padStart(2, "0") + "-" + now.getDate().toString().padStart(2, "0") + " " + now.getHours().toString().padStart(2, "0") + ":" + now.getMinutes().toString().padStart(2, "0") + ":" + now.getSeconds().toString().padStart(2, "0");
+              lastCheckTime.textContent = timeString;
+            });
+        }
+
+        // 初始检查
+        checkServiceStatus();
+        startAutoRefresh();
+
+        // 点击重新检查按钮
+        checkBtn.addEventListener("click", checkServiceStatus);
+
+        // 自动刷新复选框变更
+        autoRefreshCheckbox.addEventListener("change", startAutoRefresh);
+      });
+    </script>
+  </body>
+</html>
