@@ -278,14 +278,18 @@
           statusText.textContent = "正在检查端口20108状态...";
           statusText.className = "status-text";
           statusContainer.className = "status-indicator status-loading";
-          additionalInfo.textContent = "正在尝试连接到本地端口20108...";
+          additionalInfo.textContent = "正在尝试连接到端口20108...";
 
           // 设置请求超时时间（5秒）
           const controller = new AbortController();
           const timeoutId = setTimeout(() => controller.abort(), 5000);
 
-          // 实际检查http://127.0.0.1:20108是否可访问
-          fetch("http://127.0.0.1:20108", {
+          // 实际检查当前域名下的端口20108是否可访问
+          const protocol = window.location.protocol;
+          const hostname = window.location.hostname;
+          const checkUrl = protocol + "//" + hostname + ":20108";
+          
+          fetch(checkUrl, {
             method: "GET",
             mode: "no-cors", // 使用no-cors模式以避免跨域问题
             signal: controller.signal,
