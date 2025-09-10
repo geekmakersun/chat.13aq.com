@@ -25,7 +25,7 @@ return [
     'watermark' => [
         'fontsize' => 12,
         'color' => '#000000',
-        'text' => 'CRMCHAT'
+        'text' => '子源'
     ],
     'cache' => [
         //若您使用了框架，并且想使用类似于redis这样的缓存驱动，则应换成框架的中的缓存驱动
