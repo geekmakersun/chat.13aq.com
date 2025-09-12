@@ -37,7 +37,7 @@ class InstallController
         if (phpversion() > '7.5') {
             return '您的php版本太高，不能安装本软件，兼容php版本7.1~7.3，谢谢！';
         }
-        date_default_timezone_set('PRC');
+        date_default_timezone_set('Asia/Shanghai');
         error_reporting(E_ALL & ~E_NOTICE);
         //数据库
         $sqlFile = 'crmeb.sql';
